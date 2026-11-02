@@ -1,4 +1,5 @@
-"""Airflow DAG: public sources -> OMOP CDM (DuckDB) -> DQ gates -> cohort -> baselines.
+"""Airflow DAG: public sources -> OMOP CDM (DuckDB) -> DQ gates -> cohort -> baselines
+-> calibration, conformal sets and the capacity threshold.
 
 Airflow only orchestrates. It runs in its own environment (.venv-airflow) because its
 dependency pins clash with MLflow's; every task shells out to the project's CLI in
@@ -42,6 +43,7 @@ with DAG(
     dq = step("data_quality_gates", "dq")
     cohort = step("build_cohort_and_features", "cohort")
     train = step("train_baselines", "train")
+    evaluate = step("calibrate_conformal_threshold", "evaluate")
     report = step("render_readme_results", "report")
 
-    download >> vocab >> d130 >> mimic >> dq >> cohort >> train >> report
+    download >> vocab >> d130 >> mimic >> dq >> cohort >> train >> evaluate >> report

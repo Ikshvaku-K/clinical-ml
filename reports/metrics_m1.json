@@ -19,7 +19,7 @@
   "n_features": 37,
   "models": {
     "logistic_regression": {
-      "run_id": "afb78e533157488499fd17fb731acb58",
+      "run_id": "e2ef80abcc2e475c8e771f305b251f92",
       "best": {
         "params": {
           "C": 0.1
@@ -29,7 +29,7 @@
       }
     },
     "hist_gradient_boosting": {
-      "run_id": "96bd041aba6045ab9cc48105387c5334",
+      "run_id": "1a5395641b7643c99a8f00865dd31e1b",
       "best": {
         "params": {
           "learning_rate": 0.02,

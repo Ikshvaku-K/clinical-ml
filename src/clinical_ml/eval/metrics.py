@@ -28,6 +28,28 @@ def _cluster_indices(groups: np.ndarray) -> list[np.ndarray]:
     return np.split(order, starts[1:])
 
 
+def bootstrap_fn(fn, arrays: dict[str, np.ndarray], groups, n_boot=1000, seed=0,
+                 alpha=0.05) -> dict:
+    """Patient-level bootstrap of any fn(**arrays) -> dict[str, float]. Returns, per key,
+    the point estimate and percentile CI."""
+    groups = np.asarray(groups)
+    clusters = _cluster_indices(groups)
+    rng = np.random.default_rng(seed)
+    point = fn(**arrays)
+    draws = {k: [] for k in point}
+    for _ in range(n_boot):
+        pick = rng.integers(0, len(clusters), len(clusters))
+        idx = np.concatenate([clusters[i] for i in pick])
+        res = fn(**{k: v[idx] for k, v in arrays.items()})
+        for k in draws:
+            draws[k].append(res[k])
+    lo, hi = 100 * alpha / 2, 100 * (1 - alpha / 2)
+    return {k: {"value": float(point[k]),
+                "ci95": [float(np.nanpercentile(draws[k], lo)),
+                         float(np.nanpercentile(draws[k], hi))]}
+            for k in point}
+
+
 def bootstrap(y, preds: dict[str, np.ndarray], groups, n_boot=2000, seed=0, alpha=0.05) -> dict:
     """Point estimates and percentile CIs for each model, plus paired differences of every
     later model vs the first one (same resamples, so the comparison is paired)."""

@@ -63,6 +63,31 @@ def train(args) -> None:
                      for m, v in s["test"].items() if m in s["models"]}})
 
 
+def evaluate(args) -> None:
+    from clinical_ml.eval.m2 import run
+
+    out = run()
+    summary = {"primary_model_for_m3": out["primary_model_for_m3"], "run_id": out["run_id"]}
+    for m, v in out["models"].items():
+        summary[m] = {
+            "recalibration": v["recalibration"]["selected"],
+            "test_ece_recalibrated": v["calibration_test"]["recalibrated"]["ece"],
+            "conformal_coverage": v["conformal_test"]["marginal"]["test"]["coverage"],
+            "conformal_coverage_readmitted":
+                v["conformal_test"]["marginal"]["test"]["coverage_readmitted"],
+            "threshold": v["operating_point"]["threshold"],
+            "ppv": v["operating_point"]["test"]["ppv"],
+            "sensitivity": v["operating_point"]["test"]["sensitivity"],
+        }
+    _print(summary)
+
+
+def benchmark(args) -> None:
+    from clinical_ml.models.benchmark import run, summary
+
+    _print(summary(run(device=args.device)))
+
+
 def report(args) -> None:
     from clinical_ml.report import update_readme
 
@@ -82,6 +107,11 @@ def main(argv=None):
         fn=dq)
     sub.add_parser("cohort", help="readmission cohorts + d130 features").set_defaults(fn=cohort)
     sub.add_parser("train", help="M1 baselines, MLflow-tracked").set_defaults(fn=train)
+    sub.add_parser("evaluate", help="M2: calibration, conformal, threshold, decision curve"
+                   ).set_defaults(fn=evaluate)
+    bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
+    bm.add_argument("--device", choices=["cpu", "cuda"])
+    bm.set_defaults(fn=benchmark)
     sub.add_parser("report", help="write README results from reports/*.json").set_defaults(
         fn=report)
     args = p.parse_args(argv)
