@@ -1,0 +1,20 @@
+# Isolated tooling (project-local Python, uv cache, envs)
+.tools/
+.venv/
+.venv-airflow/
+.airflow/
+
+# Data and run outputs are rebuilt with `make data` / `make all`
+data/
+mlruns/
+mlflow.db
+reports/*.parquet
+reports/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.DS_Store

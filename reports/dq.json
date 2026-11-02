@@ -1,0 +1,474 @@
+{
+  "schemas": [
+    {
+      "schema": "cdm_d130",
+      "checks": [
+        {
+          "name": "condition_occurrence.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 303496,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 120777,
+          "passed": true
+        },
+        {
+          "name": "measurement.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 25561,
+          "passed": true
+        },
+        {
+          "name": "observation.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 1087765,
+          "passed": true
+        },
+        {
+          "name": "visit_occurrence.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 101766,
+          "passed": true
+        },
+        {
+          "name": "observation_period.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 71518,
+          "passed": true
+        },
+        {
+          "name": "death.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 1652,
+          "passed": true
+        },
+        {
+          "name": "visit_detail.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 0,
+          "passed": true
+        },
+        {
+          "name": "condition_occurrence.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 303496,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 120777,
+          "passed": true
+        },
+        {
+          "name": "measurement.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 25561,
+          "passed": true
+        },
+        {
+          "name": "observation.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 1087765,
+          "passed": true
+        },
+        {
+          "name": "visit_detail.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 0,
+          "passed": true
+        },
+        {
+          "name": "visit end >= visit start",
+          "severity": "error",
+          "failing": 0,
+          "total": 101766,
+          "passed": true
+        },
+        {
+          "name": "drug end >= drug start",
+          "severity": "error",
+          "failing": 0,
+          "total": 120777,
+          "passed": true
+        },
+        {
+          "name": "visits inside the person's observation period",
+          "severity": "error",
+          "failing": 0,
+          "total": 101766,
+          "passed": true
+        },
+        {
+          "name": "one observation period per person",
+          "severity": "error",
+          "failing": 0,
+          "total": 71518,
+          "passed": true
+        },
+        {
+          "name": "year_of_birth plausible (1850 to visit year)",
+          "severity": "error",
+          "failing": 0,
+          "total": 71518,
+          "passed": true
+        },
+        {
+          "name": "no clinical visits start after death",
+          "severity": "info",
+          "failing": 14,
+          "total": 101766,
+          "passed": true
+        },
+        {
+          "name": "condition_occurrence standard-concept coverage",
+          "severity": "info",
+          "failing": 303496,
+          "total": 303496,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure standard-concept coverage",
+          "severity": "info",
+          "failing": 120777,
+          "total": 120777,
+          "passed": true
+        },
+        {
+          "name": "measurement standard-concept coverage",
+          "severity": "info",
+          "failing": 25561,
+          "total": 25561,
+          "passed": true
+        },
+        {
+          "name": "observation standard-concept coverage",
+          "severity": "info",
+          "failing": 1087765,
+          "total": 1087765,
+          "passed": true
+        }
+      ],
+      "concept_coverage": {
+        "condition_occurrence": {
+          "rows": 303496,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 915,
+          "codes_mapped_pct": 0.0
+        },
+        "drug_exposure": {
+          "rows": 120777,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 21,
+          "codes_mapped_pct": 0.0
+        },
+        "measurement": {
+          "rows": 25561,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 3,
+          "codes_mapped_pct": 0.0
+        },
+        "observation": {
+          "rows": 1087765,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 31,
+          "codes_mapped_pct": 0.0
+        }
+      },
+      "passed": true
+    },
+    {
+      "schema": "cdm_mimic",
+      "checks": [
+        {
+          "name": "condition_occurrence.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 5051,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 17552,
+          "passed": true
+        },
+        {
+          "name": "procedure_occurrence.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 3450,
+          "passed": true
+        },
+        {
+          "name": "measurement.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 372761,
+          "passed": true
+        },
+        {
+          "name": "observation.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 411388,
+          "passed": true
+        },
+        {
+          "name": "visit_occurrence.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 497,
+          "passed": true
+        },
+        {
+          "name": "observation_period.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 100,
+          "passed": true
+        },
+        {
+          "name": "death.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 31,
+          "passed": true
+        },
+        {
+          "name": "visit_detail.person_id exists in person",
+          "severity": "error",
+          "failing": 0,
+          "total": 140,
+          "passed": true
+        },
+        {
+          "name": "condition_occurrence.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 5051,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 17552,
+          "passed": true
+        },
+        {
+          "name": "procedure_occurrence.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 3450,
+          "passed": true
+        },
+        {
+          "name": "measurement.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 372761,
+          "passed": true
+        },
+        {
+          "name": "observation.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 411388,
+          "passed": true
+        },
+        {
+          "name": "visit_detail.visit_occurrence_id exists in visit_occurrence",
+          "severity": "error",
+          "failing": 0,
+          "total": 140,
+          "passed": true
+        },
+        {
+          "name": "visit end >= visit start",
+          "severity": "error",
+          "failing": 0,
+          "total": 497,
+          "passed": true
+        },
+        {
+          "name": "drug end >= drug start",
+          "severity": "error",
+          "failing": 0,
+          "total": 17552,
+          "passed": true
+        },
+        {
+          "name": "visits inside the person's observation period",
+          "severity": "error",
+          "failing": 0,
+          "total": 497,
+          "passed": true
+        },
+        {
+          "name": "one observation period per person",
+          "severity": "error",
+          "failing": 0,
+          "total": 100,
+          "passed": true
+        },
+        {
+          "name": "year_of_birth plausible (1850 to visit year)",
+          "severity": "error",
+          "failing": 0,
+          "total": 100,
+          "passed": true
+        },
+        {
+          "name": "no clinical visits start after death",
+          "severity": "info",
+          "failing": 0,
+          "total": 497,
+          "passed": true
+        },
+        {
+          "name": "condition_occurrence standard-concept coverage",
+          "severity": "info",
+          "failing": 5051,
+          "total": 5051,
+          "passed": true
+        },
+        {
+          "name": "drug_exposure standard-concept coverage",
+          "severity": "info",
+          "failing": 17552,
+          "total": 17552,
+          "passed": true
+        },
+        {
+          "name": "procedure_occurrence standard-concept coverage",
+          "severity": "info",
+          "failing": 3450,
+          "total": 3450,
+          "passed": true
+        },
+        {
+          "name": "measurement standard-concept coverage",
+          "severity": "info",
+          "failing": 372761,
+          "total": 372761,
+          "passed": true
+        },
+        {
+          "name": "observation standard-concept coverage",
+          "severity": "info",
+          "failing": 411388,
+          "total": 411388,
+          "passed": true
+        }
+      ],
+      "concept_coverage": {
+        "condition_occurrence": {
+          "rows": 5051,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 1575,
+          "codes_mapped_pct": 0.0
+        },
+        "drug_exposure": {
+          "rows": 17552,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 1644,
+          "codes_mapped_pct": 0.0
+        },
+        "procedure_occurrence": {
+          "rows": 3450,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 436,
+          "codes_mapped_pct": 0.0
+        },
+        "measurement": {
+          "rows": 372761,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 1051,
+          "codes_mapped_pct": 0.0
+        },
+        "observation": {
+          "rows": 411388,
+          "rows_mapped_pct": 0.0,
+          "distinct_source_codes": 778,
+          "codes_mapped_pct": 0.0
+        }
+      },
+      "passed": true
+    }
+  ],
+  "reconciliation": [
+    {
+      "check": "d130 encounters -> visit_occurrence",
+      "source": 101766,
+      "omop": 101766,
+      "passed": true
+    },
+    {
+      "check": "d130 distinct patients -> person",
+      "source": 71518,
+      "omop": 71518,
+      "passed": true
+    },
+    {
+      "check": "d130 non-missing diag_1..3 -> condition_occurrence",
+      "source": 303496,
+      "omop": 303496,
+      "passed": true
+    },
+    {
+      "check": "d130 LOS within source inclusion (1-14 days)",
+      "source": 101766,
+      "omop": 101766,
+      "passed": true
+    },
+    {
+      "check": "mimic Patient -> person",
+      "source": 100,
+      "omop": 100,
+      "passed": true
+    },
+    {
+      "check": "mimic hospital+ED Encounter -> visit_occurrence",
+      "source": 497,
+      "omop": 497,
+      "passed": true
+    },
+    {
+      "check": "mimic Condition -> condition_occurrence",
+      "source": 5051,
+      "omop": 5051,
+      "passed": true
+    },
+    {
+      "check": "mimic Observation -> measurement + observation",
+      "source": 784149,
+      "omop": 784149,
+      "passed": true
+    },
+    {
+      "check": "mimic labs linked to a visit (by time window)",
+      "source": 107727,
+      "omop": 80103,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

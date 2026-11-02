@@ -1,0 +1,20 @@
+{
+  "d130": {
+    "index_visits": 101766,
+    "excluded_death_or_hospice": 2423,
+    "excluded_after_recorded_death": 14,
+    "eligible": 99329,
+    "eligible_persons": 69985,
+    "readmit_30d": 11305,
+    "readmit_30d_rate": 0.1138
+  },
+  "mimic": {
+    "index_visits": 275,
+    "excluded_death_or_hospice": 20,
+    "excluded_after_recorded_death": 0,
+    "eligible": 255,
+    "eligible_persons": 93,
+    "readmit_30d": 53,
+    "readmit_30d_rate": 0.2078
+  }
+}
