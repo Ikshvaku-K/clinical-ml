@@ -1,0 +1,12 @@
+{
+  "pgvector": "0.6.2",
+  "rows": 424668,
+  "index": "hnsw m=16 ef_construction=200",
+  "embedding_dim": 768,
+  "chunks": 424668,
+  "chunks_truncated_for_dense": 1,
+  "chunk_tokens": {
+    "median": 173.0,
+    "max": 661
+  }
+}

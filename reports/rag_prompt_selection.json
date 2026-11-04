@@ -1,0 +1,20 @@
+{
+  "rule": "higher dev balanced answer/abstain accuracy (retrieval condition)",
+  "dev": {
+    "base": {
+      "answer_when_note_present": 0.9226804123711341,
+      "abstain_when_note_absent": 0.330188679245283,
+      "balanced": 0.6264345458082086,
+      "n_present": 194,
+      "n_absent": 106
+    },
+    "strict": {
+      "answer_when_note_present": 0.9072164948453608,
+      "abstain_when_note_absent": 0.4528301886792453,
+      "balanced": 0.6800233417623031,
+      "n_present": 194,
+      "n_absent": 106
+    }
+  },
+  "selected": "strict"
+}

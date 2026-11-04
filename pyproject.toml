@@ -20,6 +20,16 @@ dependencies = [
 dev = ["pytest>=8", "ruff>=0.6"]
 # Linux only (CI/Docker or the GPU node): the macOS wheel needs Homebrew's libomp.
 benchmark = ["xgboost>=2.1"]
+rag = [
+    "bm25s>=0.3.16",
+    "langchain-core>=1.7.4",
+    "langchain-openai>=1.7.3",
+    "pgserver>=0.1.4",
+    "pgvector>=0.5.1",
+    "psycopg[binary]>=3.3.8",
+    "pystemmer>=3.1.0",
+    "tokenizers>=0.23.3",
+]
 
 [project.scripts]
 clinical-ml = "clinical_ml.cli:main"

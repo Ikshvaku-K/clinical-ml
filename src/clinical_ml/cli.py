@@ -93,6 +93,34 @@ def audit(args) -> None:
                      for a, v in fair.items()}})
 
 
+def rag(args) -> None:
+    if args.step == "serve":
+        from clinical_ml.rag.models import serve
+
+        serve(args.role)
+    from clinical_ml.rag import data, pipeline
+
+    if args.step in ("generate", "judge"):
+        from clinical_ml.rag import generate, judge
+
+        if args.step == "generate":
+            out = generate.run(args.split)
+            _print({"split": args.split, "rows": len(out),
+                    "abstained": int(out["abstain"].sum()),
+                    "errors": int(out["error"].notna().sum())})
+            return
+        judge.run_judge(args.split)
+        _print(judge.summarize(args.split))
+        return
+    steps = {"data": data.run, "index": pipeline.index, "retrieve": pipeline.retrieve_all}
+    out = steps[args.step]()
+    if args.step == "retrieve":
+        out = {"selected": out["selected_for_generation"],
+               "hnsw_vs_exact_overlap@20": out["hnsw_vs_exact_overlap@20"],
+               "dev": {c: v["overall"] for c, v in out["splits"]["dev"]["configs"].items()}}
+    _print(out)
+
+
 def benchmark(args) -> None:
     from clinical_ml.models.benchmark import run, summary
 
@@ -122,6 +150,13 @@ def main(argv=None):
                    ).set_defaults(fn=evaluate)
     sub.add_parser("audit", help="M3: TreeSHAP explanations and subgroup fairness audit"
                    ).set_defaults(fn=audit)
+    rg = sub.add_parser("rag", help="Phase 2a clinical-note RAG (GPU pod)")
+    rg.add_argument("step", choices=["serve", "data", "index", "retrieve", "generate",
+                                     "judge"])
+    rg.add_argument("--split", choices=["dev", "test"], default="dev")
+    rg.add_argument("role", nargs="?", choices=["embed", "rerank", "generate", "judge"],
+                    help="for serve: which vLLM server to start")
+    rg.set_defaults(fn=rag)
     bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
     bm.add_argument("--device", choices=["cpu", "cuda"])
     bm.set_defaults(fn=benchmark)

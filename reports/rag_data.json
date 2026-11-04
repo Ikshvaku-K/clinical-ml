@@ -1,0 +1,51 @@
+{
+  "source": {
+    "repo": "starmpcc/Asclepius-Synthetic-Clinical-Notes",
+    "revision": "52af6897eb1bf275a8937ae54bf42da381fe9421",
+    "file": "synthetic.csv",
+    "sha256": "083b1b3531ad5865bcac23250ec04a532b70df8ff534b8aa9bee87b04cf97c84"
+  },
+  "rows": 158114,
+  "unique_notes": 158114,
+  "rows_by_task": {
+    "Question Answering": 20038,
+    "Abbreviation Expansion": 20015,
+    "Relation Extraction": 19926,
+    "Named Entity Recognition": 19848,
+    "Summarization": 19756,
+    "Temporal Information Extraction": 19654,
+    "Coreference Resolution": 19622,
+    "Paraphrasing": 19255
+  },
+  "eligible_rows": 79374,
+  "excluded_unanswerable_reference": 656,
+  "indexed_notes": 157984,
+  "chunks": 424668,
+  "chunk_words": {
+    "median": 114.0,
+    "p95": 148.0,
+    "max": 150
+  },
+  "questions": {
+    "dev": {
+      "n": 300,
+      "held_out": 30,
+      "by_task": {
+        "Temporal Information Extraction": 80,
+        "Question Answering": 80,
+        "Relation Extraction": 70,
+        "Summarization": 70
+      }
+    },
+    "test": {
+      "n": 1000,
+      "held_out": 100,
+      "by_task": {
+        "Relation Extraction": 261,
+        "Question Answering": 251,
+        "Summarization": 251,
+        "Temporal Information Extraction": 237
+      }
+    }
+  }
+}
