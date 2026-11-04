@@ -24,7 +24,7 @@ AIRFLOW  := 3.3.2
 PY       := $(CURDIR)/.venv/bin/python -I
 CLI      := $(PY) -m clinical_ml.cli
 
-.PHONY: setup setup-airflow setup-benchmark data omop dq cohort train evaluate benchmark report all dag-test test lint clean
+.PHONY: setup setup-airflow setup-benchmark data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
 
 setup:
 	uv python install $(PYVER)
@@ -58,6 +58,9 @@ train:
 evaluate:
 	$(CLI) evaluate
 
+audit:
+	$(CLI) audit
+
 # Linux only: `make setup-benchmark` first; DEVICE=cuda on the GPU node
 benchmark:
 	$(CLI) benchmark $(if $(DEVICE),--device $(DEVICE))
@@ -65,7 +68,7 @@ benchmark:
 report:
 	$(CLI) report
 
-all: data omop dq cohort train evaluate report
+all: data omop dq cohort train evaluate audit report
 
 dag-test:
 	.venv-airflow/bin/airflow dags test omop_readmission

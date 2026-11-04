@@ -82,6 +82,17 @@ def evaluate(args) -> None:
     _print(summary)
 
 
+def audit(args) -> None:
+    from clinical_ml.eval.m3 import run
+
+    out = run()
+    fair = out["fairness"]["attributes"]
+    _print({"run_id": out["run_id"], "shap_checks": out["shap"]["checks"],
+            "top_features": [g["label"] for g in out["shap"]["global"][:5]],
+            "gaps": {a: {m: v["gaps"][m] for m in ("sensitivity", "observed_over_expected")}
+                     for a, v in fair.items()}})
+
+
 def benchmark(args) -> None:
     from clinical_ml.models.benchmark import run, summary
 
@@ -92,7 +103,7 @@ def report(args) -> None:
     from clinical_ml.report import update_readme
 
     update_readme()
-    print("README.md results block updated")
+    print("README.md results blocks (and MODEL_CARD.md, if present) updated")
 
 
 def main(argv=None):
@@ -109,6 +120,8 @@ def main(argv=None):
     sub.add_parser("train", help="M1 baselines, MLflow-tracked").set_defaults(fn=train)
     sub.add_parser("evaluate", help="M2: calibration, conformal, threshold, decision curve"
                    ).set_defaults(fn=evaluate)
+    sub.add_parser("audit", help="M3: TreeSHAP explanations and subgroup fairness audit"
+                   ).set_defaults(fn=audit)
     bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
     bm.add_argument("--device", choices=["cpu", "cuda"])
     bm.set_defaults(fn=benchmark)

@@ -15,7 +15,7 @@
   },
   "models": {
     "logistic_regression": {
-      "m1_run_id": "e2ef80abcc2e475c8e771f305b251f92",
+      "m1_run_id": "ff87392a075f4da49b4cb712c89daa6c",
       "recalibration": {
         "selected": "none",
         "cv_brier_on_calibration_split": {
@@ -423,7 +423,7 @@
       }
     },
     "hist_gradient_boosting": {
-      "m1_run_id": "1a5395641b7643c99a8f00865dd31e1b",
+      "m1_run_id": "4cb824d21af34eb4999261508d9ededf",
       "recalibration": {
         "selected": "platt",
         "cv_brier_on_calibration_split": {
@@ -833,5 +833,5 @@
   },
   "primary_model_for_m3": "hist_gradient_boosting",
   "primary_rule": "lowest calibration-split grouped-CV Brier after recalibration",
-  "run_id": "4cbbafe20e1e45c5a6d915e1faa8a5df"
+  "run_id": "e66aaf12adb84a1d91044a8d9e963e39"
 }

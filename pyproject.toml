@@ -12,6 +12,8 @@ dependencies = [
     "scikit-learn>=1.5",
     "mlflow>=3.0",
     "matplotlib>=3.9",
+    "shap>=0.54.1",
+    "fairlearn>=0.15.0",
 ]
 
 [project.optional-dependencies]

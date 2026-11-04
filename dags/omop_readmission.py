@@ -1,5 +1,5 @@
 """Airflow DAG: public sources -> OMOP CDM (DuckDB) -> DQ gates -> cohort -> baselines
--> calibration, conformal sets and the capacity threshold.
+-> calibration, conformal sets and the capacity threshold -> SHAP and fairness audit.
 
 Airflow only orchestrates. It runs in its own environment (.venv-airflow) because its
 dependency pins clash with MLflow's; every task shells out to the project's CLI in
@@ -44,6 +44,7 @@ with DAG(
     cohort = step("build_cohort_and_features", "cohort")
     train = step("train_baselines", "train")
     evaluate = step("calibrate_conformal_threshold", "evaluate")
+    audit = step("explain_and_audit_fairness", "audit")
     report = step("render_readme_results", "report")
 
-    download >> vocab >> d130 >> mimic >> dq >> cohort >> train >> evaluate >> report
+    download >> vocab >> d130 >> mimic >> dq >> cohort >> train >> evaluate >> audit >> report
