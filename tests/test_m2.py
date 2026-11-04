@@ -98,3 +98,45 @@ def test_xgboost_handles_categorical_features():
     y = ((X["a"] == "x") | (X["b"] > 0.8)).astype(int).to_numpy()
     m = benchmark.make_xgb(X, learning_rate=0.1, max_depth=3, n_estimators=50).fit(X, y)
     assert m.predict_proba(X).shape == (500, 2)
+
+
+def test_benchmark_block_renders_from_json(tmp_path, monkeypatch):
+    import json
+
+    from clinical_ml import config, report
+
+    ci = {"value": 0.5, "ci95": [0.4, 0.6]}
+    models = ("logistic_regression", "hist_gradient_boosting", "xgboost")
+    best = {"params": {"learning_rate": 0.05}, "cv_auroc_mean": 0.66, "cv_auroc_sd": 0.004}
+    bench = {
+        "environment": {"platform": "Linux-x86_64", "cpu_count": 8, "device": "cuda",
+                        "gpu": "Some GPU", "xgboost_version": "3.4.1",
+                        "sklearn_version": "1.7.0"},
+        "models": {m: {"run_id": "abcdef0123", "best": best, "fit_and_select_seconds": 12.3,
+                       "cv_grid": [best, {**best, "params": {"learning_rate": 0.1},
+                                          "cv_auroc_mean": 0.65}]}
+                   for m in models},
+        "test": {m: {"auroc": ci, "auprc": ci, "brier": ci} for m in models}
+        | {f"{m}_minus_logistic_regression_auroc": ci for m in models[1:]}
+        | {"bootstrap": {"n_boot": 2000, "n_patients": 100}},
+    }
+    bench["models"]["xgboost"]["device_used"] = "cuda"
+    (tmp_path / "benchmark.json").write_text(json.dumps(bench))
+    monkeypatch.setattr(config, "REPORTS", tmp_path)
+    block = report.render_benchmark()
+    assert block.startswith(report.BENCH_START) and block.endswith(report.BENCH_END)
+    assert block.count("| 0.500 (0.400–0.600) |") == 3
+    assert "- XGBoost: 0.5000 (0.4000–0.6000)" in block
+    assert "- Histogram gradient boosting: 0.5000" in block
+    assert "trained on `cuda`" in block and "Some GPU" in block
+    assert "learning_rate=0.05 (min)" in block
+
+
+def test_grid_edges_flags_only_boundary_choices():
+    from clinical_ml.report import grid_edges
+
+    grid = [{"params": {"lr": lr, "depth": d}} for lr in (0.02, 0.05, 0.1) for d in (3, 4, 6)]
+    grid.insert(0, grid.pop(grid.index({"params": {"lr": 0.05, "depth": 3}})))
+    assert grid_edges(grid) == ["depth=3 (min)"]
+    grid.insert(0, grid.pop(grid.index({"params": {"lr": 0.05, "depth": 4}})))
+    assert grid_edges(grid) == []

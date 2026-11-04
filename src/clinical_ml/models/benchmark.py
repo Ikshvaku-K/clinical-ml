@@ -18,6 +18,7 @@ import itertools
 import json
 import os
 import platform
+import subprocess
 import time
 
 import mlflow
@@ -49,13 +50,33 @@ def make_xgb(_X, device: str = "cpu", **params):
         random_state=config.SEED, eval_metric="logloss", min_child_weight=5, **params)
 
 
+def _environment(device: str) -> dict:
+    import sklearn
+    import xgboost
+
+    env = {"platform": platform.platform(), "cpu_count": os.cpu_count(), "device": device,
+           "xgboost_version": xgboost.__version__, "sklearn_version": sklearn.__version__}
+    if device.startswith("cuda"):
+        try:
+            env["gpu"] = subprocess.run(
+                ["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                capture_output=True, text=True, check=True).stdout.splitlines()[0].strip()
+        except (OSError, subprocess.CalledProcessError, IndexError):
+            env["gpu"] = "unknown"
+    return env
+
+
+def _xgb_device_used(model) -> str:
+    """The device XGBoost actually trained on, read back from the fitted booster's config."""
+    cfg = json.loads(model.get_booster().save_config())
+    return cfg["learner"]["generic_param"]["device"]
+
+
 def run(device: str | None = None) -> dict:
     ok, why = xgboost_available()
     if not ok:
         raise SystemExit(f"XGBoost unavailable on this machine ({why}). Run the benchmark on "
                          "Linux (CI/Docker) or the GPU node; see SCOPE.md, M2.")
-    import xgboost
-
     device = device or os.environ.get("XGB_DEVICE", "cpu")
     os.environ.setdefault("MLFLOW_TRACKING_URI", f"sqlite:///{config.ROOT / 'mlflow.db'}")
     with schema.connect(read_only=True) as con:
@@ -75,8 +96,7 @@ def run(device: str | None = None) -> dict:
         ("xgboost", lambda X_, **p: make_xgb(X_, device=device, **p), XGB_GRID),
     )
     mlflow.set_experiment("readmission-d130")
-    env = {"platform": platform.platform(), "device": device,
-           "xgboost_version": xgboost.__version__}
+    env = _environment(device)
     out = {"environment": env, "models": {}}
     preds = {}
     for name, make, grid in candidates:
@@ -92,7 +112,9 @@ def run(device: str | None = None) -> dict:
                                 "fit_and_select_seconds": seconds})
             mlflow.log_dict({"cv_grid": cv}, "cv_grid.json")
             out["models"][name] = {"run_id": run.info.run_id, "best": best,
-                                   "fit_and_select_seconds": seconds}
+                                   "fit_and_select_seconds": seconds, "cv_grid": cv}
+            if name == "xgboost":
+                out["models"][name]["device_used"] = _xgb_device_used(model)
 
     test = bootstrap(y[te], preds, df.loc[te, "person_id"].to_numpy(), n_boot=2000,
                      seed=config.SEED)

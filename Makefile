@@ -24,7 +24,7 @@ AIRFLOW  := 3.3.2
 PY       := $(CURDIR)/.venv/bin/python -I
 CLI      := $(PY) -m clinical_ml.cli
 
-.PHONY: setup setup-airflow data omop dq cohort train evaluate benchmark report all dag-test test lint clean
+.PHONY: setup setup-airflow setup-benchmark data omop dq cohort train evaluate benchmark report all dag-test test lint clean
 
 setup:
 	uv python install $(PYVER)
@@ -35,6 +35,10 @@ setup-airflow:
 	uv pip install --python .venv-airflow/bin/python "apache-airflow==$(AIRFLOW)" \
 	  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-$(AIRFLOW)/constraints-$(PYVER).txt"
 	.venv-airflow/bin/airflow db migrate
+
+# Linux only (CI, Docker or the GPU node): XGBoost's macOS wheel needs Homebrew's libomp
+setup-benchmark: setup
+	uv sync --extra dev --extra benchmark --python $(PYVER)
 
 data:
 	$(CLI) download
@@ -54,7 +58,7 @@ train:
 evaluate:
 	$(CLI) evaluate
 
-# Linux only: `uv sync --extra dev --extra benchmark` first; DEVICE=cuda on the GPU node
+# Linux only: `make setup-benchmark` first; DEVICE=cuda on the GPU node
 benchmark:
 	$(CLI) benchmark $(if $(DEVICE),--device $(DEVICE))
 
