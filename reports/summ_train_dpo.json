@@ -1,0 +1,99 @@
+{
+  "stage": "dpo",
+  "examples": 346,
+  "seconds": 326.3,
+  "peak_gpu_memory_gb": 23.5,
+  "settings": {
+    "lora": {
+      "r": 16,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "task_type": "CAUSAL_LM",
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "common": {
+      "bf16": true,
+      "gradient_checkpointing": true,
+      "max_length": 2048,
+      "lr_scheduler_type": "cosine",
+      "warmup_steps": 0.03,
+      "logging_steps": 10,
+      "save_strategy": "no",
+      "report_to": "none",
+      "seed": 20261102
+    },
+    "dpo": {
+      "num_train_epochs": 1,
+      "learning_rate": 2e-05,
+      "beta": 0.1,
+      "per_device_train_batch_size": 4,
+      "gradient_accumulation_steps": 4
+    }
+  },
+  "log_history": [
+    {
+      "loss": 0.6466845035552978,
+      "grad_norm": 1.9240537881851196,
+      "learning_rate": 1.3653410243663953e-05,
+      "entropy": 0.3441246822476387,
+      "num_tokens": 195771.0,
+      "logits/chosen": -0.8184612962128606,
+      "logits/rejected": -0.7030007289880857,
+      "mean_token_accuracy": 0.9293210223317147,
+      "rewards/chosen": -0.009324039972852916,
+      "rewards/rejected": -0.11163146659964696,
+      "rewards/accuracies": 0.61875,
+      "rewards/margins": 0.10230742474086582,
+      "logps/chosen": -23.023592019081114,
+      "logps/rejected": -30.220490527153014,
+      "epoch": 0.45977011494252873,
+      "step": 10
+    },
+    {
+      "loss": 0.5771328926086425,
+      "grad_norm": 1.9375896453857422,
+      "learning_rate": 9.903113209758098e-07,
+      "entropy": 0.35107825323939323,
+      "num_tokens": 390498.0,
+      "logits/chosen": -0.7626699062624547,
+      "logits/rejected": -0.6654630146031097,
+      "mean_token_accuracy": 0.9246393039822578,
+      "rewards/chosen": -0.09602429203223437,
+      "rewards/rejected": -0.3811079800128937,
+      "rewards/accuracies": 0.75,
+      "rewards/margins": 0.28508368842303755,
+      "logps/chosen": -24.99435226917267,
+      "logps/rejected": -32.77980694770813,
+      "epoch": 0.9195402298850575,
+      "step": 20
+    },
+    {
+      "train_runtime": 181.6407,
+      "train_samples_per_second": 1.905,
+      "train_steps_per_second": 0.121,
+      "total_flos": 2.435578100372275e+16,
+      "train_loss": 0.6114060336893256,
+      "entropy": 0.37928061400141033,
+      "num_tokens": 421602.0,
+      "logits/chosen": -0.7251268818566483,
+      "logits/rejected": -0.664724126272608,
+      "mean_token_accuracy": 0.9140866228512355,
+      "rewards/chosen": -0.1749976421041148,
+      "rewards/rejected": -0.4010663000600679,
+      "rewards/accuracies": 0.6428571428571429,
+      "rewards/margins": 0.22606864411916053,
+      "logps/chosen": -25.325335093906947,
+      "logps/rejected": -33.371826716831755,
+      "epoch": 1.0,
+      "step": 22
+    }
+  ]
+}

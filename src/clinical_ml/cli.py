@@ -98,6 +98,11 @@ def rag(args) -> None:
         from clinical_ml.rag.models import serve
 
         serve(args.role)
+    if args.step == "purge":
+        from clinical_ml.rag.models import purge
+
+        _print({"deleted": purge(tuple(args.keep))})
+        return
     from clinical_ml.rag import data, pipeline
 
     if args.step in ("generate", "judge"):
@@ -119,6 +124,20 @@ def rag(args) -> None:
                "hnsw_vs_exact_overlap@20": out["hnsw_vs_exact_overlap@20"],
                "dev": {c: v["overall"] for c, v in out["splits"]["dev"]["configs"].items()}}
     _print(out)
+
+
+def summ(args) -> None:
+    from clinical_ml.summarise import data
+
+    steps = {"data": data.run}
+    if args.step != "data":
+        from clinical_ml.summarise import evaluate, pairs
+
+        steps |= {"sample": pairs.sample, "score": pairs.score, "pairs": pairs.build,
+                  "generate": evaluate.generate,
+                  "judge": lambda: evaluate.judge(args.judge),
+                  "metrics": evaluate.metrics_report}
+    _print(steps[args.step]())
 
 
 def benchmark(args) -> None:
@@ -151,12 +170,21 @@ def main(argv=None):
     sub.add_parser("audit", help="M3: TreeSHAP explanations and subgroup fairness audit"
                    ).set_defaults(fn=audit)
     rg = sub.add_parser("rag", help="Phase 2a clinical-note RAG (GPU pod)")
-    rg.add_argument("step", choices=["serve", "data", "index", "retrieve", "generate",
-                                     "judge"])
+    rg.add_argument("step", choices=["serve", "purge", "data", "index", "retrieve",
+                                     "generate", "judge"])
     rg.add_argument("--split", choices=["dev", "test"], default="dev")
-    rg.add_argument("role", nargs="?", choices=["embed", "rerank", "generate", "judge"],
+    rg.add_argument("--keep", nargs="*", default=[], help="for purge: roles to keep cached")
+    rg.add_argument("role", nargs="?", choices=["embed", "rerank", "generate", "judge",
+                                                "summarise", "eval_judge"],
                     help="for serve: which vLLM server to start")
     rg.set_defaults(fn=rag)
+    sm = sub.add_parser("summ", help="Phase 2b LoRA SFT + DPO summariser (GPU pod); "
+                        "training itself runs via clinical_ml.summarise.train")
+    sm.add_argument("step", choices=["data", "sample", "score", "pairs", "generate", "judge",
+                                     "metrics"])
+    sm.add_argument("--judge", choices=["eval_judge", "judge"], default="eval_judge",
+                    help="for judge: which served judge grades the summaries")
+    sm.set_defaults(fn=summ)
     bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
     bm.add_argument("--device", choices=["cpu", "cuda"])
     bm.set_defaults(fn=benchmark)

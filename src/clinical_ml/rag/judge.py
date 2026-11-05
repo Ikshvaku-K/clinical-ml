@@ -62,12 +62,12 @@ class Claims(BaseModel):
     claims: list[Claim]
 
 
-def _llm(schema):
+def _llm(schema, role: str = "judge"):
     from langchain_core.prompts import ChatPromptTemplate
     from langchain_openai import ChatOpenAI
 
-    m = MODELS["judge"]
-    llm = ChatOpenAI(model="judge", base_url=m.base_url, api_key="EMPTY", temperature=0,
+    m = MODELS[role]
+    llm = ChatOpenAI(model=role, base_url=m.base_url, api_key="EMPTY", temperature=0,
                      max_tokens=2048, timeout=300)
     template = CORRECTNESS if schema is Grade else FAITHFULNESS
     return (ChatPromptTemplate.from_messages([("human", template)])

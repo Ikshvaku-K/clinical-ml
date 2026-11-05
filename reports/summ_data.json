@@ -1,0 +1,15 @@
+{
+  "task": "Summarization",
+  "excluded_2a_notes": 1300,
+  "splits": {
+    "sft": 4000,
+    "dpo": 2000,
+    "test": 300,
+    "dev": 100
+  },
+  "note_words_median": 265.0,
+  "reference_words": {
+    "median": 77.0,
+    "p95": 127.0
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "prompts": 2000,
+  "samples": 8000,
+  "usable_samples": 8000,
+  "sft_sample_faithfulness": {
+    "mean": 0.9912131279362849,
+    "share_fully_supported": 0.928875
+  },
+  "prompts_with_any_unsupported_sample": 0.206,
+  "pairs": 346,
+  "pair_gap_mean": 0.12784303644518466,
+  "words_chosen_vs_rejected": [
+    81.89595375722543,
+    83.95953757225433
+  ],
+  "rules": {
+    "pair": "chosen fully supported, rejected with >= 1 unsupported claim",
+    "length_ratio": 1.25,
+    "samples": 4,
+    "temperature": 0.8
+  },
+  "pairs_under_original_rule": 30,
+  "original_rule": "faithfulness gap >= 0.25"
+}
