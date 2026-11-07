@@ -76,7 +76,7 @@ def run(device: str | None = None) -> dict:
     ok, why = xgboost_available()
     if not ok:
         raise SystemExit(f"XGBoost unavailable on this machine ({why}). Run the benchmark on "
-                         "Linux (CI/Docker) or the GPU node; see SCOPE.md, M2.")
+                         "Linux (CI/Docker) or the GPU node; see README, M2b.")
     device = device or os.environ.get("XGB_DEVICE", "cpu")
     os.environ.setdefault("MLFLOW_TRACKING_URI", f"sqlite:///{config.ROOT / 'mlflow.db'}")
     with schema.connect(read_only=True) as con:

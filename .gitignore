@@ -1,7 +1,11 @@
 # Isolated tooling (project-local Python, uv cache, envs)
 .tools/
+# private planning notes, never published
+EXPLAIN.md
+SCOPE.md
 .venv/
 .venv-airflow/
+.venv-vllm/
 .airflow/
 
 # Data and run outputs are rebuilt with `make data` / `make all`

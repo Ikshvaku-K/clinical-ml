@@ -1,6 +1,6 @@
 """Diabetes 130-US Hospitals (Strack et al., 2014) -> OMOP CDM v5.4 (schema cdm_d130).
 
-One source row is one inpatient encounter. Mapping decisions (see EXPLAIN.md 3.3):
+One source row is one inpatient encounter. Mapping decisions (see README, Warehouse design):
 
 * Date shift. The source has no dates. Each patient's encounters are ordered by
   encounter_id and placed 365 days apart from an anchor of 2000-01-01; the visit ends

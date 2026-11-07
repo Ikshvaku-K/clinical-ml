@@ -9,7 +9,7 @@
    shorter is safer). The pair with the largest faithfulness gap wins; ties go to the
    pair closest in length.
 
-Deviation from the pre-set rule, decided before any evaluation (Kiran, 2026-11-05): the
+Deviation from the pre-set rule, decided before any evaluation (2026-11-05): the
 plan required a gap >= 0.25. The SFT model's samples were 99.1% faithful, so that rule
 left 30 pairs; "fully supported vs not" keeps the same intent and gives several hundred.
 """

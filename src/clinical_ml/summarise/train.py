@@ -2,7 +2,7 @@
 
 Run in the GPU env:  .venv-vllm/bin/python -m clinical_ml.summarise.train sft|dpo
 
-Settings are fixed in advance (SCOPE.md, 2b). Prompts are rendered with the model's own
+Settings are fixed in advance (README, Phase 2b protocol). Prompts are rendered with the model's own
 chat template with thinking off, exactly as vLLM renders them at inference, and TRL adds
 the end-of-turn token to each completion.
 * SFT: prompt -> reference summary, loss on the completion only.
