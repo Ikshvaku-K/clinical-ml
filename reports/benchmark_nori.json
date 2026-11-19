@@ -1,0 +1,1164 @@
+{
+  "choices": {
+    "score": "p1",
+    "cv_auroc_train": {
+      "mean": {
+        "mean": 0.6549102352487627,
+        "sd": 0.006720924631168837,
+        "folds": [
+          0.656970655509417,
+          0.6532231533259847,
+          0.6663651714991421,
+          0.6519619838304517,
+          0.6460302120788182
+        ]
+      },
+      "p1": {
+        "mean": 0.6549230657846457,
+        "sd": 0.0066700221805664935,
+        "folds": [
+          0.6569871435382679,
+          0.6535093036018518,
+          0.6662288440633859,
+          0.6518512300020416,
+          0.646038807717681
+        ]
+      }
+    },
+    "recalibration": {
+      "selected": "platt",
+      "cv_brier_on_calibration_split": {
+        "none": 0.0969642037222369,
+        "platt": 0.0968427414770051,
+        "isotonic": 0.09688883137906273
+      }
+    },
+    "calibration_split_clipped": 0,
+    "rules": {
+      "score": "higher mean grouped 5-fold CV AUROC on train",
+      "recalibration": "lowest grouped 5-fold CV Brier on the calibration split among none, platt, isotonic"
+    }
+  },
+  "discrimination": {
+    "logistic_regression": {
+      "auroc": {
+        "value": 0.6733438506088149,
+        "ci95": [
+          0.6606991014383963,
+          0.6863326244930298
+        ]
+      },
+      "auprc": {
+        "value": 0.22184480554504887,
+        "ci95": [
+          0.2053878181544413,
+          0.24161746251881427
+        ]
+      },
+      "brier": {
+        "value": 0.0991027547312486,
+        "ci95": [
+          0.09535499380109902,
+          0.10281441965035369
+        ]
+      },
+      "log_loss": {
+        "value": 0.34188679281953316,
+        "ci95": [
+          0.3316829052869781,
+          0.3516793845464504
+        ]
+      },
+      "prevalence": 0.11752381902529056,
+      "n": 20047
+    },
+    "hist_gradient_boosting": {
+      "auroc": {
+        "value": 0.6776410319233236,
+        "ci95": [
+          0.6648004991736269,
+          0.6899621215456222
+        ]
+      },
+      "auprc": {
+        "value": 0.23466970408388516,
+        "ci95": [
+          0.21583600031096467,
+          0.2554766628663793
+        ]
+      },
+      "brier": {
+        "value": 0.09855194986483075,
+        "ci95": [
+          0.0948114028658139,
+          0.10221587155500571
+        ]
+      },
+      "log_loss": {
+        "value": 0.34013836835129785,
+        "ci95": [
+          0.33007610869768444,
+          0.3499744237586364
+        ]
+      },
+      "prevalence": 0.11752381902529056,
+      "n": 20047
+    },
+    "nori": {
+      "auroc": {
+        "value": 0.6692110167189076,
+        "ci95": [
+          0.6559275055307617,
+          0.6826708860847599
+        ]
+      },
+      "auprc": {
+        "value": 0.21863339196120768,
+        "ci95": [
+          0.2011841076725341,
+          0.23761817543234756
+        ]
+      },
+      "brier": {
+        "value": 0.0995010462080387,
+        "ci95": [
+          0.09559478626831473,
+          0.10328998263040537
+        ]
+      },
+      "log_loss": {
+        "value": 0.34355680398093735,
+        "ci95": [
+          0.33316609799002367,
+          0.3535435934512341
+        ]
+      },
+      "prevalence": 0.11752381902529056,
+      "n": 20047
+    },
+    "hist_gradient_boosting_minus_logistic_regression_auroc": {
+      "value": 0.004297181314508736,
+      "ci95": [
+        -0.0002870192456228382,
+        0.008970779153014342
+      ]
+    },
+    "nori_minus_logistic_regression_auroc": {
+      "value": -0.004132833889907261,
+      "ci95": [
+        -0.010136623913956661,
+        0.0017458333501873047
+      ]
+    },
+    "bootstrap": {
+      "n_boot": 2000,
+      "unit": "patient",
+      "n_patients": 13997
+    },
+    "nori_minus_hist_gradient_boosting_auroc": {
+      "value": -0.008430015204415997,
+      "ci95": [
+        -0.013769149491882978,
+        -0.002814147592352827
+      ]
+    }
+  },
+  "calibration_nori": {
+    "raw": {
+      "brier": {
+        "value": 0.0995010462080387,
+        "ci95": [
+          0.0956195933268705,
+          0.10336975527372876
+        ]
+      },
+      "observed_over_expected": {
+        "value": 1.0966058175037598,
+        "ci95": [
+          1.0546343631164303,
+          1.1404040195368428
+        ]
+      },
+      "calibration_slope": {
+        "value": 1.053712122428913,
+        "ci95": [
+          0.9727343558687672,
+          1.1308989665689217
+        ]
+      },
+      "calibration_intercept": {
+        "value": 0.1078498081838684,
+        "ci95": [
+          0.0619644505947446,
+          0.15396645594910424
+        ]
+      },
+      "ece": {
+        "value": 0.012073484247963392,
+        "ci95": [
+          0.009019641179666726,
+          0.01743830096532841
+        ]
+      }
+    },
+    "recalibrated": {
+      "brier": {
+        "value": 0.09934301944009315,
+        "ci95": [
+          0.09560183496207443,
+          0.10305087296522811
+        ]
+      },
+      "observed_over_expected": {
+        "value": 1.0261206392440045,
+        "ci95": [
+          0.9868466393564663,
+          1.0667831810683424
+        ]
+      },
+      "calibration_slope": {
+        "value": 0.9777504444890547,
+        "ci95": [
+          0.9022985319146992,
+          1.0506298070464128
+        ]
+      },
+      "calibration_intercept": {
+        "value": 0.030512937919451248,
+        "ci95": [
+          -0.015602220742917016,
+          0.07663069924147278
+        ]
+      },
+      "ece": {
+        "value": 0.006941794545189579,
+        "ci95": [
+          0.005725896770350736,
+          0.012336736738143126
+        ]
+      }
+    }
+  },
+  "recalibrated_brier": {
+    "logistic_regression": {
+      "value": 0.09910275473124862,
+      "ci95": [
+        0.09540162589475316,
+        0.10288754073232988
+      ]
+    },
+    "hist_gradient_boosting": {
+      "value": 0.0983964179215274,
+      "ci95": [
+        0.0947399203858421,
+        0.1020763442316784
+      ]
+    },
+    "nori": {
+      "value": 0.09934301944009315,
+      "ci95": [
+        0.09560183496207443,
+        0.10305087296522811
+      ]
+    },
+    "nori_minus_logistic_regression": {
+      "value": 0.00024026470884452866,
+      "ci95": [
+        -6.249903789794127e-05,
+        0.0005471779642404232
+      ]
+    },
+    "nori_minus_hist_gradient_boosting": {
+      "value": 0.0009466015185657511,
+      "ci95": [
+        0.0004972291972033457,
+        0.0013591681054536976
+      ]
+    }
+  },
+  "recalibration_methods": {
+    "logistic_regression": "none",
+    "hist_gradient_boosting": "platt",
+    "nori": "platt"
+  },
+  "test_clipped": 0,
+  "runs": {
+    "cv": {
+      "calls": [
+        {
+          "fold": 0,
+          "context_pool_rows": 47472,
+          "context_ids_sha256": "4c3f4bc82ed1ad797a760edfaedec7227743e411bce5d1bbccaedd65ec7b9969",
+          "context_rows": 10000,
+          "query_rows": 11869,
+          "seconds": 450.9,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        },
+        {
+          "fold": 1,
+          "context_pool_rows": 47473,
+          "context_ids_sha256": "c91323e210da5a61aa2a3bef95dc3dff4dc649f8886b67e5d2cf4191f4715dee",
+          "context_rows": 10000,
+          "query_rows": 11868,
+          "seconds": 450.2,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        },
+        {
+          "fold": 2,
+          "context_pool_rows": 47473,
+          "context_ids_sha256": "9b3314ca14b67b2a39e1d6235c37a317c77b99594e4074cffb2383b00e6e16d1",
+          "context_rows": 10000,
+          "query_rows": 11868,
+          "seconds": 450.2,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        },
+        {
+          "fold": 3,
+          "context_pool_rows": 47473,
+          "context_ids_sha256": "7bf8b4751c5c09327d59a26ff64e86ba3f0a39e39e50f348f5a82161f33829fc",
+          "context_rows": 10000,
+          "query_rows": 11868,
+          "seconds": 449.1,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        },
+        {
+          "fold": 4,
+          "context_pool_rows": 47473,
+          "context_ids_sha256": "11440599b45eb75544aeec022c3c84927f37a3b90f0e142ce0cd7cbbc638f459",
+          "context_rows": 10000,
+          "query_rows": 11868,
+          "seconds": 449.9,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        }
+      ],
+      "versions": {
+        "synthefy_nori": "0.23.0",
+        "torch": "2.13.0+cu130",
+        "python": "3.12.14"
+      },
+      "memory_policy": {
+        "allow_quantization": false,
+        "allow_subsample": false,
+        "elements_budget": 388500
+      }
+    },
+    "calibration": {
+      "calls": [
+        {
+          "fold": -1,
+          "context_pool_rows": 59341,
+          "context_ids_sha256": "e4929c556c31b7bc674e4d18e16cc59ba3370acd0234dc1c4fc92f7c83627d3b",
+          "context_rows": 10000,
+          "query_rows": 19941,
+          "seconds": 750.7,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        }
+      ],
+      "versions": {
+        "synthefy_nori": "0.23.0",
+        "torch": "2.13.0+cu130",
+        "python": "3.12.14"
+      },
+      "memory_policy": {
+        "allow_quantization": false,
+        "allow_subsample": false,
+        "elements_budget": 388500
+      }
+    },
+    "test": {
+      "calls": [
+        {
+          "fold": -1,
+          "context_pool_rows": 59341,
+          "context_ids_sha256": "e4929c556c31b7bc674e4d18e16cc59ba3370acd0234dc1c4fc92f7c83627d3b",
+          "context_rows": 10000,
+          "query_rows": 20047,
+          "seconds": 766.5,
+          "device": "cuda:0",
+          "memory_report": {
+            "cache": false,
+            "reuse_context_cache": false,
+            "cache_dtype": "bf16",
+            "allow_quantization": false,
+            "gpu_budget_frac": 0.4,
+            "gpu_budget_absolute_gb": null,
+            "offload_to_host": false,
+            "host_budget_frac": 0.25,
+            "host_budget_absolute_gb": null,
+            "stream_context": false,
+            "context_row_chunk": null,
+            "adaptive_query_chunk": true,
+            "elements_budget": 388500,
+            "allow_subsample": false,
+            "rung": "no_cache",
+            "est_cache_gb": 0.0,
+            "resident_gb": 0.0,
+            "query_chunk": null,
+            "dropped_context_rows": 0,
+            "attempt_history": [
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1,
+                  2,
+                  3
+                ],
+                "path": "pipeline_batch",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "oom",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  0
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  1
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  2
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              },
+              {
+                "pipeline_ids": [
+                  3
+                ],
+                "path": "plain_loop",
+                "rung": "no_cache",
+                "cache_dtype": "bf16",
+                "offload_to_host": false,
+                "context_row_chunk": null,
+                "query_chunk": null,
+                "outcome": "success",
+                "reason": "resolved",
+                "dropped_context_rows": 0
+              }
+            ]
+          }
+        }
+      ],
+      "versions": {
+        "synthefy_nori": "0.23.0",
+        "torch": "2.13.0+cu130",
+        "python": "3.12.14"
+      },
+      "memory_policy": {
+        "allow_quantization": false,
+        "allow_subsample": false,
+        "elements_budget": 388500
+      }
+    }
+  },
+  "model": {
+    "name": "nori-1-5",
+    "revision": "79afc5a65b2775d0c62977211a63620ce87846c7",
+    "memory_policy": {
+      "allow_quantization": false,
+      "allow_subsample": false
+    }
+  },
+  "run_id": "1ef74390f370476fbe246e984ed09e9a"
+}
