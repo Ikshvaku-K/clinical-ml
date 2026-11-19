@@ -24,7 +24,7 @@ AIRFLOW  := 3.3.2
 PY       := $(CURDIR)/.venv/bin/python -I
 CLI      := $(PY) -m clinical_ml.cli
 
-.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
+.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu setup-nori nori-export nori-predict nori-choose nori-evaluate data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
 
 setup:
 	uv python install $(PYVER)
@@ -54,6 +54,16 @@ setup-gpu:
 setup-benchmark: setup
 	uv sync --extra dev --extra benchmark --python $(PYVER)
 
+# M2c: Nori (tabular foundation model) in its own env: it pins torch and huggingface-hub < 2,
+# which clash with .venv-vllm. Weights go to .tools/hf at the revision pinned in
+# src/clinical_ml/models/nori.py. Runs on CUDA, Apple MPS or CPU.
+NORI_PKGS := "synthefy-nori==0.23.0"
+NORI      := $(CURDIR)/.venv-nori/bin/python -I -m clinical_ml.models.nori
+setup-nori:
+	uv venv --python $(PYVER) --allow-existing .venv-nori
+	uv pip install --python .venv-nori/bin/python $(NORI_PKGS)
+	uv pip install --python .venv-nori/bin/python --no-deps -e .
+
 data:
 	$(CLI) download
 
@@ -78,6 +88,21 @@ audit:
 # Linux only: `make setup-benchmark` first; DEVICE=cuda on the GPU node
 benchmark:
 	$(CLI) benchmark $(if $(DEVICE),--device $(DEVICE))
+
+# M2c, in order: export, predict STEP=cv, predict STEP=calibration, choose, predict
+# STEP=test (refused before choose, and refused a second time), evaluate. STEP=probe
+# measures speed and memory on train rows only (CONTEXT= / QUERY= subsample them).
+nori-export:
+	$(CLI) nori export
+
+nori-predict:
+	$(NORI) predict $(STEP) $(if $(CONTEXT),--context $(CONTEXT)) $(if $(QUERY),--query $(QUERY))
+
+nori-choose:
+	$(CLI) nori choose
+
+nori-evaluate:
+	$(CLI) nori evaluate
 
 report:
 	$(CLI) report

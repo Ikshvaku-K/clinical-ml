@@ -6,6 +6,7 @@ SCOPE.md
 .venv/
 .venv-airflow/
 .venv-vllm/
+.venv-nori/
 .airflow/
 
 # Data and run outputs are rebuilt with `make data` / `make all`

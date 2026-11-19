@@ -146,6 +146,15 @@ def benchmark(args) -> None:
     _print(summary(run(device=args.device)))
 
 
+def nori(args) -> None:
+    from clinical_ml.models import nori as m
+
+    if args.step == "evaluate":
+        _print(m.summary(m.evaluate()))
+        return
+    _print({"export": m.export, "choose": m.choose}[args.step]())
+
+
 def report(args) -> None:
     from clinical_ml.report import update_readme
 
@@ -188,6 +197,10 @@ def main(argv=None):
     bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
     bm.add_argument("--device", choices=["cpu", "cuda"])
     bm.set_defaults(fn=benchmark)
+    nr = sub.add_parser("nori", help="M2c: Nori foundation-model row; predict itself runs in "
+                        ".venv-nori via clinical_ml.models.nori")
+    nr.add_argument("step", choices=["export", "choose", "evaluate"])
+    nr.set_defaults(fn=nori)
     sub.add_parser("report", help="write README results from reports/*.json").set_defaults(
         fn=report)
     args = p.parse_args(argv)

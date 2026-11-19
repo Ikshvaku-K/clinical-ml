@@ -22,6 +22,7 @@ block is regenerated from `reports/*.json` by `make report`.
 | M1 | Sources + checksums, OMOP ETLs (Diabetes-130, FHIR), Airflow DAG, DQ gates, cohort, patient-level split, LR + GBM baselines, MLflow | **done** |
 | M2 | Calibration, split-conformal sets, capacity-based threshold, decision curve | **done** |
 | M2b | XGBoost benchmark vs LR and HistGBM: same split, features and bootstrap, all three trained in one run | **done** (Linux GPU node) |
+| M2c | Nori, a pretrained tabular foundation model (no training), as one pre-declared extra row: same split, features and bootstrap | protocol fixed; not run yet |
 | M3 | TreeSHAP explanations, Fairlearn subgroup audit with CIs, [model card](MODEL_CARD.md) | **done** |
 | M4 | Docker, GitHub Actions CI, Terraform (Azure, validate only), Streamlit monitor | planned (deferred) |
 | Phase 2a | Retrieval-augmented QA over 158k clinical notes: BM25 + pgvector + reranker, Qwen3-8B with citations, phi-4 judge | **done** (GPU pod) |
@@ -221,6 +222,14 @@ Paired AUROC differences, each model minus Logistic regression (L2) (same bootst
 - **Determinism.** The benchmark ran twice with identical modelling code; the second run
   only added the CV grid to `benchmark.json`. Test metrics, CIs and selected
   hyperparameters were identical, and the table is the second run.
+
+## Results (M2c): a tabular foundation model
+
+<!-- results-nori:start -->
+
+_Not run yet. The protocol below is fixed first, and the test split is scored once._
+
+<!-- results-nori:end -->
 
 ## Results (M3): explanations and subgroup audit
 
@@ -547,6 +556,7 @@ open, no access request or token needed):
 | RedHatAI/Mistral-Small-3.2-24B-Instruct-2506-FP8 | Independent 2b judge | Apache-2.0 |
 | BAAI/bge-base-en-v1.5 | Dense retrieval | MIT |
 | BAAI/bge-reranker-v2-m3 | Cross-encoder rerank | Apache-2.0 |
+| Synthefy/Nori-1-5 | M2c tabular foundation model (pinned in `src/clinical_ml/models/nori.py`) | Apache-2.0 |
 
 - **Checksums.** Downloads are checked against PhysioNet's `SHA256SUMS.txt`, and against a
   pinned SHA-256 for the UCI zip.
@@ -667,6 +677,57 @@ calibration split, and the test split only *reports*.
     regression and HistGBM are refit exactly as in M1 and give the same test numbers;
   - XGBoost's input stays on the CPU, so prediction falls back from GPU to CPU. XGBoost
     warns about this; it affects speed only, not results.
+
+## Modelling protocol (M2c)
+
+Fixed, and committed, before Nori read the test split. M2b concluded that the learner is
+not the bottleneck. M2c tests that with a learner that works differently and has nothing
+to tune: [Nori](https://github.com/Synthefy/synthefy-nori), a tabular foundation model
+pretrained on synthetic tables only. It predicts by in-context learning: `fit` stores the
+labelled rows and `predict` reads them in a forward pass, with no training.
+
+- **Model:** `nori-1-5` from `synthefy-nori==0.23.0`, run locally. The weights are pinned to
+  Hugging Face revision `79afc5a6` (Apache-2.0, ungated). It uses its stored inference
+  config, a 4-member ensemble. Nothing is tuned. Only the local `NoriRegressor` is used:
+  the package's hosted client would send rows to an API, and it is never called.
+- **Off-label use, disclosed.** Nori is regression-only: classification was removed from
+  its public API. It is given the 0/1 readmission label as a number. A weak result would
+  therefore say little about tabular foundation models in general.
+- **Inputs:** the same 37 OMOP features, with the 17 categoricals declared as categorical
+  and nothing scaled, as Nori's documentation asks.
+- **Context:** a fixed sample of 10,000 train encounters, drawn with the project seed. In CV
+  it is drawn from the other four folds, so no patient is both context and query. For the
+  calibration and test splits it is drawn from all 59,341 train encounters. Nori may not
+  quantise or drop rows itself, so a run that does not fit fails instead of using fewer rows.
+  - *Amended before any CV score was computed.* This bullet first said every train
+    encounter. Nori 1.5's two-phase encoder has no context cache, so every batch of queries
+    re-reads the context in one pass, and its row attention grows with rows × context rows.
+    A pass over all of train did not fit the 8 GB GPU used (RTX 3060 Ti), and neither did
+    20,000 rows. Nori therefore sees about a sixth of the rows the M1 models were trained
+    on, which works against it.
+- **The one choice.** Each prediction gives two risk scores: the predictive mean, and
+  P(y = 1), the predicted distribution's mass above 0.5. The one with the higher grouped
+  5-fold CV AUROC on train is used, on the same folds as the M1 grids. The choice and the
+  recalibration below are written to `reports/nori_choices.json` before test is predicted;
+  `predict test` refuses to run without that file, and refuses a second time.
+- **Recalibration:** none, Platt or isotonic, chosen by grouped CV Brier on the
+  calibration split, as in M2. Nori predicts the calibration split with the 10,000-row
+  train sample as context.
+- **Test, scored once:**
+  - AUROC, AUPRC and Brier on the score, with the 2,000-resample patient bootstrap and the
+    seed of M1 and M2b;
+  - paired AUROC differences, Nori minus logistic regression and Nori minus HGB, against
+    the stored M1 predictions (checked to reproduce the M1 test AUROC exactly);
+  - after recalibration: Brier, calibration slope and intercept, ECE, and paired Brier
+    differences against the M2-recalibrated M1 models.
+  - The predictive mean can fall outside [0, 1]. If it is chosen, such values are clipped
+    before any metric, and the count is reported.
+  - XGBoost is not compared: its test predictions were not stored.
+- **Compute:** probes on train rows only measure speed and memory first. The runs use a
+  home RTX 3060 Ti (8 GB). Query batch size is set per machine with `NORI_PLACEMENT`. It can
+  change only memory placement and batch size, which per Nori's documentation changes
+  floating-point rounding only. It can never change the context, quantise the cache or drop
+  rows. It is logged with every run, along with the device and a hash of the context rows.
 
 ## Modelling protocol (M3)
 
@@ -793,6 +854,27 @@ The XGBoost benchmark runs on Linux only, after `make all` (DEVICE=cpu also work
 make setup-benchmark benchmark report DEVICE=cuda
 ```
 
+M2c (Nori) runs in its own `.venv-nori`, on CUDA, Apple MPS or CPU, after `make all`:
+
+```bash
+make setup-nori nori-export
+```
+
+On an 8 GB GPU, cap each pass at the 10,000 context rows plus 500 queries (37 features
+per row) before predicting:
+
+```bash
+export NORI_PLACEMENT='{"elements_budget": 388500}'
+```
+
+```bash
+make nori-predict STEP=cv && make nori-predict STEP=calibration && make nori-choose
+```
+
+```bash
+make nori-predict STEP=test && make nori-evaluate report
+```
+
 Phase 2a runs on a Linux GPU host:
 - **Envs:** `make setup-rag` for the client side, plus a separate `.venv-vllm` with
   `vllm==0.32.0` for the model servers.
@@ -840,6 +922,7 @@ src/clinical_ml/
   eval/treeshap.py      exact TreeSHAP for HistGradientBoosting incl. categorical splits
   eval/fairness.py      subgroup audit (Fairlearn + patient-level bootstrap); eval/m3.py the M3 run
   models/benchmark.py   LR vs HistGBM vs XGBoost in one run (Linux / GPU node)
+  models/nori.py        M2c: Nori rows (export, predict in .venv-nori, choose, evaluate)
   rag/                  Phase 2a: data (Asclepius, chunks, questions), models (pinned, vLLM),
                         retrieve (BM25, pgvector, RRF, rerank), pipeline, generate, judge
   summarise/            Phase 2b: data split, train (LoRA SFT + DPO, TRL), pairs (on-policy

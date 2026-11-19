@@ -1,0 +1,40 @@
+{
+  "score": "p1",
+  "cv_auroc_train": {
+    "mean": {
+      "mean": 0.6549102352487627,
+      "sd": 0.006720924631168837,
+      "folds": [
+        0.656970655509417,
+        0.6532231533259847,
+        0.6663651714991421,
+        0.6519619838304517,
+        0.6460302120788182
+      ]
+    },
+    "p1": {
+      "mean": 0.6549230657846457,
+      "sd": 0.0066700221805664935,
+      "folds": [
+        0.6569871435382679,
+        0.6535093036018518,
+        0.6662288440633859,
+        0.6518512300020416,
+        0.646038807717681
+      ]
+    }
+  },
+  "recalibration": {
+    "selected": "platt",
+    "cv_brier_on_calibration_split": {
+      "none": 0.0969642037222369,
+      "platt": 0.0968427414770051,
+      "isotonic": 0.09688883137906273
+    }
+  },
+  "calibration_split_clipped": 0,
+  "rules": {
+    "score": "higher mean grouped 5-fold CV AUROC on train",
+    "recalibration": "lowest grouped 5-fold CV Brier on the calibration split among none, platt, isotonic"
+  }
+}
