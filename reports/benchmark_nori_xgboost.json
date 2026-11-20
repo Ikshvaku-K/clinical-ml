@@ -1,0 +1,124 @@
+{
+  "discrimination": {
+    "xgboost": {
+      "auroc": {
+        "value": 0.6769877329162891,
+        "ci95": [
+          0.6641847106937931,
+          0.6894513849050584
+        ]
+      },
+      "auprc": {
+        "value": 0.2353626136752124,
+        "ci95": [
+          0.21664794774316132,
+          0.25570116716101254
+        ]
+      },
+      "brier": {
+        "value": 0.0984896868467331,
+        "ci95": [
+          0.09473141953349114,
+          0.1021738549694419
+        ]
+      },
+      "log_loss": {
+        "value": 0.3401680290699005,
+        "ci95": [
+          0.32996964976191523,
+          0.34995698034763334
+        ]
+      },
+      "prevalence": 0.11752381902529056,
+      "n": 20047
+    },
+    "nori": {
+      "auroc": {
+        "value": 0.6692110167189076,
+        "ci95": [
+          0.6559275055307617,
+          0.6826708860847599
+        ]
+      },
+      "auprc": {
+        "value": 0.21863339196120768,
+        "ci95": [
+          0.2011841076725341,
+          0.23761817543234756
+        ]
+      },
+      "brier": {
+        "value": 0.0995010462080387,
+        "ci95": [
+          0.09559478626831473,
+          0.10328998263040537
+        ]
+      },
+      "log_loss": {
+        "value": 0.34355680398093735,
+        "ci95": [
+          0.33316609799002367,
+          0.3535435934512341
+        ]
+      },
+      "prevalence": 0.11752381902529056,
+      "n": 20047
+    },
+    "nori_minus_xgboost_auroc": {
+      "value": -0.007776716197381517,
+      "ci95": [
+        -0.013702906498826831,
+        -0.0014385183335929343
+      ]
+    },
+    "bootstrap": {
+      "n_boot": 2000,
+      "unit": "patient",
+      "n_patients": 13997
+    }
+  },
+  "xgboost_rerun": {
+    "environment": {
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+      "cpu_count": 12,
+      "device": "cuda",
+      "xgboost_version": "3.4.1",
+      "sklearn_version": "1.9.1",
+      "gpu": "NVIDIA GeForce RTX 3060 Ti"
+    },
+    "device_used": "cuda:0",
+    "best": {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6623621004487354,
+      "cv_auroc_sd": 0.006380162726542336
+    },
+    "same_hyperparameters": true,
+    "cv_auroc_difference": 0.0,
+    "test_auroc": 0.6769877329162891,
+    "test_auroc_difference": 0.0,
+    "m2b": {
+      "best": {
+        "params": {
+          "learning_rate": 0.1,
+          "max_depth": 3,
+          "n_estimators": 100
+        },
+        "cv_auroc_mean": 0.6623621004487354,
+        "cv_auroc_sd": 0.006380162726542336
+      },
+      "test_auroc": 0.6769877329162891,
+      "environment": {
+        "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+        "cpu_count": 128,
+        "device": "cuda",
+        "xgboost_version": "3.4.1",
+        "sklearn_version": "1.9.1",
+        "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+      }
+    }
+  }
+}

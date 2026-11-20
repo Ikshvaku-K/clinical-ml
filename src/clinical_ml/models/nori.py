@@ -310,6 +310,41 @@ def compare(choices: dict, cal: pd.DataFrame, test: pd.DataFrame) -> dict:
             "test_clipped": clipped}
 
 
+def pair_with_xgboost(score: str, test: pd.DataFrame) -> dict:
+    """Nori and XGBoost on the M1 bootstrap resamples of the test split. `test` holds the
+    Nori scores, `p_xgboost`, the label and person_id, sorted by visit_occurrence_id."""
+    from clinical_ml.eval.metrics import bootstrap
+
+    p, _ = to_probability(test[score].to_numpy())
+    return bootstrap(test["readmit_30d"].to_numpy(),
+                     {"xgboost": test["p_xgboost"].to_numpy(), "nori": p},
+                     test["person_id"].to_numpy(), n_boot=N_BOOT, seed=config.SEED)
+
+
+def compare_xgboost() -> dict:
+    """Nori − XGBoost on paired resamples, added after the M2c results: M2b kept no XGBoost
+    predictions, so `clinical-ml benchmark --rerun-xgboost` refits it to store them. Nothing
+    is chosen here; Nori's scores and choices are the committed ones."""
+    from clinical_ml.models.benchmark import XGB_PREDICTIONS
+
+    choices = json.loads((config.REPORTS / "nori_choices.json").read_text())
+    rerun = json.loads((config.REPORTS / "xgboost_rerun.json").read_text())
+    xgb = pd.read_parquet(XGB_PREDICTIONS)
+    test = _scores("test").merge(xgb[xgb["split"] == "test"].drop(columns="split"),
+                                 on="visit_occurrence_id", validate="1:1")
+    assert len(test) == len(_scores("test")), "XGBoost test rows do not match Nori's"
+    out = pair_with_xgboost(choices["score"], test)
+    nori_row = json.loads((config.REPORTS / "benchmark_nori.json").read_text())[
+        "discrimination"]["nori"]
+    assert out["nori"] == nori_row, "not the resamples of the committed Nori results"
+    result = {"discrimination": out,
+              "xgboost_rerun": {k: rerun[k] for k in (
+                  "environment", "device_used", "best", "same_hyperparameters",
+                  "cv_auroc_difference", "test_auroc", "test_auroc_difference", "m2b")}}
+    (config.REPORTS / "benchmark_nori_xgboost.json").write_text(json.dumps(result, indent=2))
+    return result
+
+
 def evaluate() -> dict:
     import mlflow
 

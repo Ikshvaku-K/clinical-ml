@@ -22,6 +22,8 @@ import subprocess
 import time
 
 import mlflow
+import pandas as pd
+from sklearn.metrics import roc_auc_score
 
 from clinical_ml import config
 from clinical_ml.eval.metrics import bootstrap
@@ -32,6 +34,7 @@ XGB_GRID = [
     {"learning_rate": lr, "max_depth": depth, "n_estimators": n}
     for lr, depth, n in itertools.product((0.02, 0.05, 0.1), (3, 4, 6), (100, 200, 400))
 ]
+XGB_PREDICTIONS = config.DATA / "benchmark" / "xgboost_predictions.parquet"
 
 
 def xgboost_available() -> tuple[bool, str]:
@@ -124,6 +127,49 @@ def run(device: str | None = None) -> dict:
             mlflow.log_metrics({f"test_{k}": test[name][k]["value"]
                                 for k in ("auroc", "auprc", "brier")})
     (config.REPORTS / "benchmark.json").write_text(json.dumps(out, indent=2))
+    return out
+
+
+def rerun_xgboost(device: str | None = None) -> dict:
+    """M2b's XGBoost again, to store the calibration and test predictions that `run` did not
+    keep, so M2c can compare Nori with it on paired resamples. Same grid, grouped folds,
+    seed and refit as `run`, on the M2c feature export (the same d130 features, split and
+    row order, so it runs without the warehouse). Whether it selects M2b's hyperparameters
+    and reproduces M2b's test AUROC is recorded in reports/xgboost_rerun.json."""
+    from clinical_ml.models import nori
+
+    ok, why = xgboost_available()
+    if not ok:
+        raise SystemExit(f"XGBoost unavailable on this machine ({why}); see README, M2b.")
+    device = device or os.environ.get("XGB_DEVICE", "cpu")
+    df = pd.read_parquet(nori.OUT / "features.parquet").drop(columns="fold")
+    assert (train.patient_split(df["person_id"]) == df["split"]).all(), "split drifted"
+    X, y = train.feature_frame(df), df["readmit_30d"].astype(int).to_numpy()
+    tr, te = (df["split"] == "train").to_numpy(), (df["split"] == "test").to_numpy()
+
+    t0 = time.time()
+    best, cv = train.grouped_cv(lambda X_, **p: make_xgb(X_, device=device, **p), XGB_GRID,
+                                X[tr], y[tr], df.loc[tr, "person_id"].to_numpy())
+    model = make_xgb(X, device=device, **best["params"]).fit(X[tr], y[tr])
+    held_out = ~tr
+    preds = df.loc[held_out, ["visit_occurrence_id", "split"]].assign(
+        p_xgboost=model.predict_proba(X[held_out])[:, 1])
+    seconds = time.time() - t0
+    XGB_PREDICTIONS.parent.mkdir(parents=True, exist_ok=True)
+    preds.to_parquet(XGB_PREDICTIONS, index=False)
+
+    m2b = json.loads((config.REPORTS / "benchmark.json").read_text())
+    m2b_best = m2b["models"]["xgboost"]["best"]
+    test_auroc = float(roc_auc_score(y[te], preds.loc[preds["split"] == "test", "p_xgboost"]))
+    out = {"environment": _environment(device), "device_used": _xgb_device_used(model),
+           "fit_and_select_seconds": seconds, "best": best, "cv_grid": cv,
+           "test_auroc": test_auroc,
+           "m2b": {"best": m2b_best, "test_auroc": m2b["test"]["xgboost"]["auroc"]["value"],
+                   "environment": m2b["environment"]},
+           "same_hyperparameters": best["params"] == m2b_best["params"],
+           "cv_auroc_difference": best["cv_auroc_mean"] - m2b_best["cv_auroc_mean"],
+           "test_auroc_difference": test_auroc - m2b["test"]["xgboost"]["auroc"]["value"]}
+    (config.REPORTS / "xgboost_rerun.json").write_text(json.dumps(out, indent=2))
     return out
 
 

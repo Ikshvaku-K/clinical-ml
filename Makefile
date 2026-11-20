@@ -24,7 +24,7 @@ AIRFLOW  := 3.3.2
 PY       := $(CURDIR)/.venv/bin/python -I
 CLI      := $(PY) -m clinical_ml.cli
 
-.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu setup-nori nori-export nori-predict nori-choose nori-evaluate data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
+.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu setup-nori nori-export nori-predict nori-choose nori-evaluate xgboost-predictions nori-compare-xgboost curve-nori curve-trees curve-evaluate nori-full-predict nori-full-choose nori-full-evaluate data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
 
 setup:
 	uv python install $(PYVER)
@@ -89,6 +89,10 @@ audit:
 benchmark:
 	$(CLI) benchmark $(if $(DEVICE),--device $(DEVICE))
 
+# Linux: M2b's XGBoost refit from data/nori/features.parquet, keeping its predictions (M2c)
+xgboost-predictions:
+	$(CLI) benchmark --rerun-xgboost $(if $(DEVICE),--device $(DEVICE))
+
 # M2c, in order: export, predict STEP=cv, predict STEP=calibration, choose, predict
 # STEP=test (refused before choose, and refused a second time), evaluate. STEP=probe
 # measures speed and memory on train rows only (CONTEXT= / QUERY= subsample them).
@@ -103,6 +107,33 @@ nori-choose:
 
 nori-evaluate:
 	$(CLI) nori evaluate
+
+nori-compare-xgboost:
+	$(CLI) nori compare-xgboost
+
+# Learning curve on train (exploratory): curve-nori in .venv-nori (needs nori-export and
+# the M2c CV run), curve-trees (MODELS= a subset of logistic_regression
+# hist_gradient_boosting xgboost; XGBoost needs Linux, DEVICE=cuda), then curve-evaluate.
+curve-nori:
+	$(CURDIR)/.venv-nori/bin/python -I -m clinical_ml.models.curve nori
+
+curve-trees:
+	$(CLI) curve trees $(if $(MODELS),--models $(MODELS)) $(if $(DEVICE),--device $(DEVICE))
+
+curve-evaluate:
+	$(CLI) curve evaluate
+
+# M2d, in order: nori-full-predict STEP=cv, nori-full-choose (the CV gate); only if it
+# passed: STEP=calibration, nori-full-choose (recalibration), STEP=test (once),
+# nori-full-evaluate. Needs the M2c scores and the learning curve.
+nori-full-predict:
+	$(CURDIR)/.venv-nori/bin/python -I -m clinical_ml.models.nori_full predict $(STEP)
+
+nori-full-choose:
+	$(CLI) nori-full choose
+
+nori-full-evaluate:
+	$(CLI) nori-full evaluate
 
 report:
 	$(CLI) report

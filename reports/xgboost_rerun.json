@@ -1,0 +1,290 @@
+{
+  "environment": {
+    "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+    "cpu_count": 12,
+    "device": "cuda",
+    "xgboost_version": "3.4.1",
+    "sklearn_version": "1.9.1",
+    "gpu": "NVIDIA GeForce RTX 3060 Ti"
+  },
+  "device_used": "cuda:0",
+  "fit_and_select_seconds": 50.17636489868164,
+  "best": {
+    "params": {
+      "learning_rate": 0.1,
+      "max_depth": 3,
+      "n_estimators": 100
+    },
+    "cv_auroc_mean": 0.6623621004487354,
+    "cv_auroc_sd": 0.006380162726542336
+  },
+  "cv_grid": [
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 3,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6551894278981311,
+      "cv_auroc_sd": 0.006995372548595474
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 3,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6594084914071997,
+      "cv_auroc_sd": 0.007943068527477483
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 3,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6615043061292779,
+      "cv_auroc_sd": 0.007016031308075795
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 4,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6579778245833626,
+      "cv_auroc_sd": 0.007289063187520411
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 4,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.661169335283846,
+      "cv_auroc_sd": 0.007101026565593585
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 4,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.661892632746133,
+      "cv_auroc_sd": 0.005850447212885943
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 6,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6589818377277389,
+      "cv_auroc_sd": 0.006009937025496242
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 6,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6609491890525412,
+      "cv_auroc_sd": 0.006249233623843391
+    },
+    {
+      "params": {
+        "learning_rate": 0.02,
+        "max_depth": 6,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6612905318955983,
+      "cv_auroc_sd": 0.005066325318130124
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 3,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6607597266120252,
+      "cv_auroc_sd": 0.007318132326219273
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 3,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6617081439487894,
+      "cv_auroc_sd": 0.006713109444909773
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 3,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6604860318872168,
+      "cv_auroc_sd": 0.00610854219467274
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6621720251244343,
+      "cv_auroc_sd": 0.006604788695036707
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6621482104956968,
+      "cv_auroc_sd": 0.005407020585680338
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6590133155741957,
+      "cv_auroc_sd": 0.004184952255999729
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6608691314053886,
+      "cv_auroc_sd": 0.005706346609878554
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6592065388452979,
+      "cv_auroc_sd": 0.004448307271641691
+    },
+    {
+      "params": {
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6518963145175121,
+      "cv_auroc_sd": 0.0031819136957951994
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6623621004487354,
+      "cv_auroc_sd": 0.006380162726542336
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6616578706133281,
+      "cv_auroc_sd": 0.005561631729529548
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6595010107485566,
+      "cv_auroc_sd": 0.004406739045991418
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6619690076122224,
+      "cv_auroc_sd": 0.006157647018835077
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6593606208984276,
+      "cv_auroc_sd": 0.004424250694707531
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6525545352506729,
+      "cv_auroc_sd": 0.003908072150925199
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6576291992947103,
+      "cv_auroc_sd": 0.0047340115875956984
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "n_estimators": 200
+      },
+      "cv_auroc_mean": 0.6495549300317275,
+      "cv_auroc_sd": 0.004105792959879669
+    },
+    {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "n_estimators": 400
+      },
+      "cv_auroc_mean": 0.6383659066744386,
+      "cv_auroc_sd": 0.00369372092824132
+    }
+  ],
+  "test_auroc": 0.6769877329162891,
+  "m2b": {
+    "best": {
+      "params": {
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "n_estimators": 100
+      },
+      "cv_auroc_mean": 0.6623621004487354,
+      "cv_auroc_sd": 0.006380162726542336
+    },
+    "test_auroc": 0.6769877329162891,
+    "environment": {
+      "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+      "cpu_count": 128,
+      "device": "cuda",
+      "xgboost_version": "3.4.1",
+      "sklearn_version": "1.9.1",
+      "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    }
+  },
+  "same_hyperparameters": true,
+  "cv_auroc_difference": 0.0,
+  "test_auroc_difference": 0.0
+}

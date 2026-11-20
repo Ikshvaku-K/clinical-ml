@@ -141,8 +141,12 @@ def summ(args) -> None:
 
 
 def benchmark(args) -> None:
-    from clinical_ml.models.benchmark import run, summary
+    from clinical_ml.models.benchmark import rerun_xgboost, run, summary
 
+    if args.rerun_xgboost:
+        out = rerun_xgboost(device=args.device)
+        _print({k: v for k, v in out.items() if k != "cv_grid"})
+        return
     _print(summary(run(device=args.device)))
 
 
@@ -152,7 +156,31 @@ def nori(args) -> None:
     if args.step == "evaluate":
         _print(m.summary(m.evaluate()))
         return
-    _print({"export": m.export, "choose": m.choose}[args.step]())
+    _print({"export": m.export, "choose": m.choose,
+            "compare-xgboost": m.compare_xgboost}[args.step]())
+
+
+def curve(args) -> None:
+    from clinical_ml.models import curve as c
+
+    if args.step == "trees":
+        logs = c.fit_trees(tuple(args.models), device=args.device)
+        _print({m: {"seconds": v["seconds"], "fits": len(v["fits"])} for m, v in logs.items()})
+        return
+    _print(c.summary(c.evaluate()))
+
+
+def nori_full(args) -> None:
+    from clinical_ml.models import nori_full as m
+
+    if args.step == "choose":
+        out = m.choose()
+        _print({"gate": out["gate"], "recalibration": out.get("recalibration"),
+                **{k: {"value": v["value"], "ci95": v["ci95"]}
+                   for k, v in out["cv"].items()}})
+        return
+    d = m.evaluate()["discrimination"]
+    _print({k: d[k] for k in d if k.endswith("_auroc")} | {"nori_full": d["nori"]["auroc"]})
 
 
 def report(args) -> None:
@@ -196,11 +224,27 @@ def main(argv=None):
     sm.set_defaults(fn=summ)
     bm = sub.add_parser("benchmark", help="LR vs HistGBM vs XGBoost in one run (Linux only)")
     bm.add_argument("--device", choices=["cpu", "cuda"])
+    bm.add_argument("--rerun-xgboost", action="store_true",
+                    help="refit M2b's XGBoost from the M2c feature export and store its "
+                    "predictions, for the paired Nori comparison")
     bm.set_defaults(fn=benchmark)
     nr = sub.add_parser("nori", help="M2c: Nori foundation-model row; predict itself runs in "
                         ".venv-nori via clinical_ml.models.nori")
-    nr.add_argument("step", choices=["export", "choose", "evaluate"])
+    nr.add_argument("step", choices=["export", "choose", "evaluate", "compare-xgboost"])
     nr.set_defaults(fn=nori)
+    cu = sub.add_parser("curve", help="learning curve on train, Nori vs the trained models on "
+                        "the same rows; Nori itself runs in .venv-nori via "
+                        "clinical_ml.models.curve")
+    cu.add_argument("step", choices=["trees", "evaluate"])
+    cu.add_argument("--models", nargs="+", default=["logistic_regression",
+                                                     "hist_gradient_boosting", "xgboost"],
+                    choices=["logistic_regression", "hist_gradient_boosting", "xgboost"])
+    cu.add_argument("--device", choices=["cpu", "cuda"], help="for XGBoost")
+    cu.set_defaults(fn=curve)
+    nf = sub.add_parser("nori-full", help="M2d: Nori over every train row (window average); "
+                        "predict runs in .venv-nori via clinical_ml.models.nori_full")
+    nf.add_argument("step", choices=["choose", "evaluate"])
+    nf.set_defaults(fn=nori_full)
     sub.add_parser("report", help="write README results from reports/*.json").set_defaults(
         fn=report)
     args = p.parse_args(argv)

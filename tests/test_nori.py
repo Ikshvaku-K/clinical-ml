@@ -189,3 +189,25 @@ def test_nori_block_renders_from_json(tmp_path, monkeypatch):
     assert "- Nori − Histogram gradient boosting: 0.0000 (0.0000–0.0000)" in block
     assert "Selected: P(y = 1) from the predicted distribution." in block
     assert block.count("| platt |") == 3 and "clipped" not in block
+    assert "XGBoost" not in block                   # no refit report yet
+
+    test["p_xgboost"] = test["p1"]
+    rerun = {"environment": {"xgboost_version": "3.4.1", "gpu": "NVIDIA GeForce RTX 3060 Ti"},
+             "device_used": "cuda:0", "same_hyperparameters": True, "test_auroc_difference": 0.0,
+             "best": {"params": {"learning_rate": 0.1, "max_depth": 3, "n_estimators": 100}}}
+    (tmp_path / "benchmark_nori_xgboost.json").write_text(json.dumps(
+        {"discrimination": nori.pair_with_xgboost("p1", test), "xgboost_rerun": rerun}))
+    block = report.render_nori()
+    assert "- Nori − XGBoost: 0.0000 (0.0000–0.0000) (added after these results" in block
+    assert "the same hyperparameters as M2b (learning_rate=0.1, max_depth=3, " in block
+    assert "is identical to M2b's" in block and "RTX 3060 Ti" in block
+
+
+def test_nori_pairs_with_xgboost_on_the_m1_resamples(monkeypatch):
+    monkeypatch.setattr(nori, "N_BOOT", 200)
+    cal, test = _frames()
+    test["p_xgboost"] = test["p_hist_gradient_boosting"]
+    out = nori.pair_with_xgboost("p1", test)
+    assert out["nori_minus_xgboost_auroc"] == {"value": 0.0, "ci95": [0.0, 0.0]}
+    ref = nori.compare({"score": "p1", "recalibration": {"selected": "platt"}}, cal, test)
+    assert out["nori"] == ref["discrimination"]["nori"]      # same resamples as compare()
