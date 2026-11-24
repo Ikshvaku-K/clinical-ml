@@ -1,0 +1,11 @@
+{
+  "candidate": "tabicl@all",
+  "recalibration": {
+    "selected": "platt",
+    "cv_brier_on_calibration_split": {
+      "none": 0.09615749776157811,
+      "platt": 0.0958653196063158,
+      "isotonic": 0.0961801432967924
+    }
+  }
+}

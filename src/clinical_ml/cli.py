@@ -183,6 +183,24 @@ def nori_full(args) -> None:
     _print({k: d[k] for k in d if k.endswith("_auroc")} | {"nori_full": d["nori"]["auroc"]})
 
 
+def variants(args) -> None:
+    from clinical_ml.models import tfm_variants as m
+
+    if args.step == "choose-candidate":
+        _print(m.choose_candidate())
+        return
+    if args.step == "evaluate-candidate":
+        d = m.evaluate_candidate()["discrimination"]
+        _print({k: d[k] for k in d if k.endswith("_auroc")} | {"candidate": d["nori"]["auroc"]})
+        return
+    out = m.evaluate()
+    r = out["results"]
+    _print({"test_rule": out["test_rule"],
+            **{k: {"value": round(v["value"], 4), "ci95": [round(x, 4) for x in v["ci95"]]}
+               | ({"folds_ahead": v["folds_ahead"]} if "folds_ahead" in v else {})
+               for k, v in r.items() if k.split("@")[0] in m.VARIANTS}})
+
+
 def report(args) -> None:
     from clinical_ml.report import update_readme
 
@@ -245,6 +263,10 @@ def main(argv=None):
                         "predict runs in .venv-nori via clinical_ml.models.nori_full")
     nf.add_argument("step", choices=["choose", "evaluate"])
     nf.set_defaults(fn=nori_full)
+    va = sub.add_parser("variants", help="M2e: foundation-model variants on train CV; "
+                        "predict runs on the GPU via clinical_ml.models.tfm_variants")
+    va.add_argument("step", choices=["evaluate", "choose-candidate", "evaluate-candidate"])
+    va.set_defaults(fn=variants)
     sub.add_parser("report", help="write README results from reports/*.json").set_defaults(
         fn=report)
     args = p.parse_args(argv)

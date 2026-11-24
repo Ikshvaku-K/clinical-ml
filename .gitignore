@@ -1,9 +1,10 @@
 # Isolated tooling (project-local Python, uv cache, envs)
 .tools/
-# private planning notes, never published
-EXPLAIN.md
-SCOPE.md
+# Markdown other than the root README stays local and private
+*.md
+!/README.md
 .venv/
+.venv-*/
 .venv-airflow/
 .venv-vllm/
 .venv-nori/

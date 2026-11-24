@@ -24,7 +24,7 @@ AIRFLOW  := 3.3.2
 PY       := $(CURDIR)/.venv/bin/python -I
 CLI      := $(PY) -m clinical_ml.cli
 
-.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu setup-nori nori-export nori-predict nori-choose nori-evaluate xgboost-predictions nori-compare-xgboost curve-nori curve-trees curve-evaluate nori-full-predict nori-full-choose nori-full-evaluate data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
+.PHONY: setup setup-airflow setup-benchmark setup-rag setup-gpu setup-nori nori-export nori-predict nori-choose nori-evaluate xgboost-predictions nori-compare-xgboost curve-nori curve-trees curve-evaluate nori-full-predict nori-full-choose nori-full-evaluate setup-tabicl variant-predict variants-evaluate candidate-predict candidate-choose candidate-evaluate data omop dq cohort train evaluate audit benchmark report all dag-test test lint clean
 
 setup:
 	uv python install $(PYVER)
@@ -63,6 +63,14 @@ setup-nori:
 	uv venv --python $(PYVER) --allow-existing .venv-nori
 	uv pip install --python .venv-nori/bin/python $(NORI_PKGS)
 	uv pip install --python .venv-nori/bin/python --no-deps -e .
+
+# M2e: TabICL v2 in its own .venv-tabicl (torch pinned to .venv-nori's, so it is not
+# downloaded twice); its checkpoint is fetched by pinned revision into .tools/hf.
+TABICL_PKGS := "tabicl==2.2.0" "torch==2.13.0" pandas pyarrow
+setup-tabicl:
+	uv venv --python $(PYVER) --allow-existing .venv-tabicl
+	uv pip install --python .venv-tabicl/bin/python $(TABICL_PKGS)
+	uv pip install --python .venv-tabicl/bin/python --no-deps -e .
 
 data:
 	$(CLI) download
@@ -134,6 +142,26 @@ nori-full-choose:
 
 nori-full-evaluate:
 	$(CLI) nori-full evaluate
+
+# M2e (train CV only): VARIANT= tabicl | cluster_route | onehot | nori-30m | nori-100m, on
+# the GPU (TabICL in .venv-tabicl, the rest in .venv-nori), then variants-evaluate.
+variant-predict:
+	$(CURDIR)/$(if $(filter tabicl,$(VARIANT)),.venv-tabicl,.venv-nori)/bin/python -I -m clinical_ml.models.tfm_variants predict $(VARIANT)
+
+variants-evaluate:
+	$(CLI) variants evaluate
+
+# The M2e test candidate, only if the test rule picked one: candidate-predict
+# STEP=calibration, candidate-choose, candidate-predict STEP=test (once), candidate-evaluate.
+CANDIDATE_VENV = $(shell $(PY) -c "import json; c = json.load(open('reports/tfm_variants.json'))['test_rule']['test_candidate'] or ''; print('.venv-tabicl' if c.startswith('tabicl') else '.venv-nori')" 2>/dev/null)
+candidate-predict:
+	$(CURDIR)/$(CANDIDATE_VENV)/bin/python -I -m clinical_ml.models.tfm_variants candidate $(STEP)
+
+candidate-choose:
+	$(CLI) variants choose-candidate
+
+candidate-evaluate:
+	$(CLI) variants evaluate-candidate
 
 report:
 	$(CLI) report
